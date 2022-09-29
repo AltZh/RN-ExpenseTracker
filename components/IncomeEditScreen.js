@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 
 import SQLite from 'react-native-sqlite-storage';
+import DatePicker from './DatePicker';
 
 const db = SQLite.openDatabase(
   {
@@ -32,9 +33,9 @@ const StackScreen = ({ navigation, route }) => {
 
   const isDarkMode = useColorScheme() === 'dark';
   const [date, setDate] = useState(String(item.day) + '/' + String(item.month) + '/' + String(item.year) || '');
-  const [day, setDay] = useState(String(item.day) || '');
-  const [month, setMonth] = useState(String(item.month) || '');
-  const [year, setYear] = useState(String(item.year) || '');
+  const [day, setDay] = useState(Number(item.day) || 0);
+  const [month, setMonth] = useState(Number(item.month) || 0);
+  const [year, setYear] = useState(Number(item.year) || 0);
   const [amountOld, _] = useState(Number(item.amount) || 0);
   const [amount, setAmount] = useState(String(item.amount) || '');
   const [category, setCategory] = useState(item.category ? String(item.category) : '1');
@@ -107,62 +108,10 @@ const StackScreen = ({ navigation, route }) => {
     })
   }
 
-  const months = {
-    1:'Янв',
-    2:'Фев',
-    3:'Мар',
-    4:'Апр',
-    5:'Май',
-    6:'Июн',
-    7:'Июл',
-    8:'Авг',
-    9:'Сен',
-    10:'Окт',
-    11:'Ноя',
-    12:'Дек',
-  }
-
-  const populateDates = () => {
-    let temp = []
-
-    temp.push({ 'id': 0, 'value':'', 'day':0, 'month':0, 'year':0, 'full': ''})
-    for (var i = 1; i < 32; i++){
-      let obj = { 'id': i, 'value':i+'/9/2022', 'day':i, 'month':9, 'year':2022, 'full': i+' '+months[9]+' \'22'}
-      temp.push(obj)
-    }
-    temp.push({ 'id': 32, 'value':'', 'day':0, 'month':0, 'year':0, 'full': ''})
-    
-    setDates(temp)
-  }
-  const [dates, setDates] = useState([])
-
   useEffect(()=>{
     getCats()
-    populateDates()
   }, [])
 
-  const flatlistRef = React.useRef();
-  const itemheight = 60
-  const startScroll = itemheight;
-  
-  useEffect(() => {
-    if (flatlistRef.current) flatlistRef.current.scrollToOffset({
-        offset:startScroll, animated: false
-    });
-  }, [flatlistRef]);
-
-  const snapToOffsets = dates.map((x, i) => {
-    return ((i * (itemheight) * 1) + startScroll)
-  })
-  const scrollY = React.useRef(new Animated.Value(0)).current;
-  const _changeDate = useCallback(({ viewableItems, changed }) => {
-      let item = viewableItems[1].item
-      setDate(item.day + '/' + item.month + '/' + item.year)
-      setDay(String(item.day))
-      setMonth(String(item.month))
-      setYear(String(item.year)) 
-    }, []);
-  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff"}}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -236,50 +185,15 @@ const StackScreen = ({ navigation, route }) => {
               </TouchableOpacity>
               <View style={{ flex: 1, justifyContent: 'space-around', }}>
                 <Text style={{  fontSize: 24, color: '#333', textAlign: 'center' }}>Дата:</Text>
-                <View style={{  height: itemheight * 3, backgroundColor: '#00000007'}}>
-                  <Animated.FlatList
-                    ref={flatlistRef}
-                    data={dates}
-                    keyExtractor={item => item.id}
-                    renderItem={({item, index}) => {
-                      const inputRange = [
-                        itemheight * (index - 2),
-                        itemheight * (index - 1),
-                        itemheight * (index + 1),
-                      ];
-                      const scale = scrollY.interpolate({
-                        inputRange,
-                        outputRange: [.85, 1, .85],
-                        extrapolate:'clamp'
-                      });
-                      const opacity = scrollY.interpolate({
-                        inputRange,
-                        outputRange: [.65, 1, .65],
-                        extrapolate:'clamp'
-                      });
-                      return (
-                        <TouchableOpacity
-                          style={{ height: itemheight, alignItems: 'center' }}
-                          onPress={()=>{
-                            setDateSelectorVisible(false)
-                          }}
-                          >
-                            <Animated.View style={{ height: itemheight, transform: [{ scale: scale }], opacity}}>
-                              <Text style={{ fontSize: 28, color: '#333', textAlign: 'center' }}>{item.full}</Text>
-                            </Animated.View>
-                        </TouchableOpacity>
-                      )
-                    }}
-                    onScroll={Animated.event(
-                      [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                      { useNativeDriver: true }
-                    )}
-                    scrollEventThrottle={32}
-                    onViewableItemsChanged={_changeDate}
-                    snapToOffsets={snapToOffsets}
-                    bounces={false}
-                  />
-                </View>
+                <DatePicker 
+                  day={day} 
+                  month={month} 
+                  year={year} 
+                  onChange={setDate} 
+                  onDayChange={setDay}
+                  onMonthChange={setMonth}
+                  onYearChange={setYear}
+                />
               </View>
             </View>
           </View>

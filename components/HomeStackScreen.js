@@ -250,7 +250,18 @@ const StackScreen = ({ navigation }) => {
               </View>
             </View> : null 
           }
-          <View style={{ marginTop: 24, padding: 24, backgroundColor: '#eee' }}></View>
+          <View>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('Expense Create')}} style={{ marginVertical: 0}}>
+              <View style={{ padding: 16, backgroundColor: '#eee' }}>
+                  <Text style={{ textAlign: "right", fontWeight: "500", color: '#333' }}>Добавить в расходы &rarr;</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('Debug')}} style={{ marginVertical: 0}}>
+              <View style={{ padding: 16, backgroundColor: '#eee' }}>
+                  <Text style={{ textAlign: "right", fontWeight: "500", color: '#333' }}>Корректировка баланса &rarr;</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
         
         <View style={{ paddingVertical: 0, borderBottomColor: "#e1e1e1", borderBottomWidth: 40}}>
@@ -334,6 +345,11 @@ const StackScreen = ({ navigation }) => {
             })}
           </View>
           <View>
+            <TouchableOpacity onPress={()=>{ navigation.navigate('Expense Create')}} style={{ marginVertical: 0}}>
+              <View style={{ padding: 16, backgroundColor: '#eee' }}>
+                  <Text style={{ textAlign: "right", fontWeight: "500", color: '#333' }}>Добавить в расходы &rarr;</Text>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={()=>{ navigation.navigate('Expenses List')}} style={{ marginVertical: 0}}>
               <View style={{ padding: 16, backgroundColor: '#eee' }}>
                   <Text style={{ textAlign: "right", fontWeight: "500", color: '#333' }}>Посмотреть все расходы &rarr;</Text>
@@ -347,11 +363,6 @@ const StackScreen = ({ navigation }) => {
           <TouchableOpacity onPress={()=>{ navigation.navigate('Categories List')}} style={{ marginVertical: 0}}>
             <View style={{ padding: 16, backgroundColor: '#eee' }}>
                 <Text style={{ textAlign: "center", fontWeight: "500" }}>Список категорий</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{ navigation.navigate('Debug')}} style={{ marginVertical: 0}}>
-            <View style={{ padding: 16, backgroundColor: '#eee' }}>
-                <Text style={{ textAlign: "center", fontWeight: "500" }}>Корректировка баланса</Text>
             </View>
           </TouchableOpacity>
           {/* <TouchableOpacity onPress={checkAccount} style={{ marginVertical: 0}}>
